@@ -1,7 +1,12 @@
 
-#pragma once
+#include "VertexBuffer.h"
+#include "GL/glew.h"
+//#include <GL/freeglut.h>
+//#include <GL/glu.h>
+//#include <GL/gl.h>
 
-#include <VertexBuffer.h>
+#ifndef VERTEX_ARRAY
+#define VERTEX_ARRAY
 
 class VertexBufferLayout;
 
@@ -19,3 +24,5 @@ public:
 	void Unbind() const;
 
 };
+
+#endif // !VERTEX_ARRAY

@@ -1,8 +1,11 @@
-// Include standard headers
-#include <GL/glu.h>
-#include <GL/gl.h>
+
+#include <GL/glew.h>
+//#include <GL/freeglut.h>
+//#include <GL/glu.h>
+//#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
+#include "Mesh.h"
 
 
 int main(void)
@@ -18,17 +21,35 @@ int main(void)
     if (!window)
     {
         glfwTerminate();
+
         return -1;
     }
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+	/* Make the window's context current */
+	glfwMakeContextCurrent(window);
+	// Initialize GLEW
+	glewExperimental = true; // Needed for core profile
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Failed to initialize GLEW\n");
+		getchar();
+		glfwTerminate();
+		return -1;
+	}
+
+	Mesh<Ver2D> mesh;
+	mesh.GenRect(1, 1);
+	RenderMesh rm;
+	rm.Initialize2D();
+	rm.SetData(mesh.get_vertex_data(), mesh.get_vertex_count(), mesh.get_triangle_data(), mesh.get_triangle_count());
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
+
+		rm.Bind();
+		glDrawElements( GL_TRIANGLES, rm.ib.GetCount(), GL_UNSIGNED_INT, 0);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
